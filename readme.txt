@@ -3,7 +3,7 @@ Contributors: unbouncewordpress
 Tags: unbounce
 Requires at least: 4.1.5
 Tested up to: 4.2.2
-Stable tag: 0.1.8
+Stable tag: 0.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Publish your Unbounce pages to WordPress!
 Publish your [Unbounce](http://unbounce.com/ "The Mobile Responsive Landing Page Builder for Marketers") pages to WordPress!
 
 This Unbounce Plug-In is in Beta Testing, if you are interested trying it out
-please contact our support team at support@unbounce.com
+please contact our support team at wpbeta@unbounce.com
 
 == Installation ==
 
@@ -32,7 +32,7 @@ OR
 
 = How do I join the beta test for this plugin? =
 
-If you are interested trying out the plugin, please contact our support team at support@unbounce.com.
+If you are interested trying out the plugin, please contact our support team at wpbeta@unbounce.com.
 
 = Do I need an Unbounce account? =
 
@@ -64,7 +64,7 @@ to help track down the issue.
 
 == Changelog ==
 
-= 0.1.8 =
+= 0.1.9 =
 * Documentation changes
 
 = 0.1.1 =
