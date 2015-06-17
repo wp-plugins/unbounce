@@ -6,8 +6,8 @@ class UBConfig {
   const UB_ROUTES_CACHE_KEY = 'ub-route-cache';
   const UB_REMOTE_DEBUG_KEY = 'ub-remote-debug';
   const UB_CACHE_TIMEOUT_ENV_KEY = 'UB_WP_ROUTES_CACHE_EXP';
-  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.15';
-  const UB_VERSION = '0.1.15';
+  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.16';
+  const UB_VERSION = '0.1.16';
 
   public static function get_page_server_domain() {
     $domain = getenv('UB_PAGE_SERVER_DOMAIN');

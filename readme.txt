@@ -3,7 +3,7 @@ Contributors: unbouncewordpress
 Tags: unbounce
 Requires at least: 4.1.5
 Tested up to: 4.2.2
-Stable tag: 0.1.15
+Stable tag: 0.1.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,7 +64,7 @@ to help track down the issue.
 
 == Changelog ==
 
-= 0.1.15 =
+= 0.1.16 =
 * Documentation changes
 
 = 0.1.1 =
