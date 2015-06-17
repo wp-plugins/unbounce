@@ -3,7 +3,7 @@
 Plugin Name: Unbounce
 Plugin URI: http://unbounce.com
 Description: Publish Unbounce Landing Pages to your Wordpress Domain.
-Version: 0.1.10
+Version: 0.1.14
 Author: Unbounce
 Author URI: http://unbounce.com
 License: GPLv2
