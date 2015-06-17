@@ -3,7 +3,7 @@
 Plugin Name: Unbounce
 Plugin URI: http://unbounce.com
 Description: Publish Unbounce Landing Pages to your Wordpress Domain.
-Version: 0.1.9
+Version: 0.1.10
 Author: Unbounce
 Author URI: http://unbounce.com
 License: GPLv2
@@ -39,7 +39,7 @@ add_action('init', function() {
   $current_path = UBUtil::array_fetch($_SERVER, 'REQUEST_URI');
 
   $raw_url = $protocol . $ps_domain . $current_path;
-  $current_url  = trim($protocol . $domain . $current_path, '/');
+  $current_url  = $protocol . $domain . $current_path;
 
   $domain_info = UBConfig::read_unbounce_domain_info($domain, false);
   $proxyable_url_set = UBUtil::array_fetch($domain_info, 'proxyable_url_set', array());
@@ -57,7 +57,7 @@ add_action('init', function() {
   ////////////////////
 
   if ($proxyable_url_set == null) {
-    UBLogger::warning("wp-routes.json not found for domain " . $domain);
+    UBLogger::warning("sitemap.xml not found for domain " . $domain);
   }
   else {
     $url_purpose = UBHTTP::get_url_purpose($proxyable_url_set,
