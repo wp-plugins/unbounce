@@ -202,8 +202,11 @@ class UBHTTP {
 
   public static function get_url_purpose($proxyable_url_set, $http_method, $url) {
     $host = parse_url($url, PHP_URL_HOST);
-    $path = parse_url($url, PHP_URL_PATH);
+    $path = rtrim(parse_url($url, PHP_URL_PATH), '/');
     $url_without_protocol = $host . $path;
+    UBLogger::debug_var('get_url_purpose $host', $host);
+    UBLogger::debug_var('get_url_purpose $path', $path);
+    UBLogger::debug_var('get_url_purpose $url_without_protocol', $url_without_protocol);
 
     if ($http_method == "POST" &&
         preg_match("/^\/(fsn|fsg|fs)\/?$/", $path)) {

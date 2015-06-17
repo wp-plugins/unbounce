@@ -6,8 +6,8 @@ class UBConfig {
   const UB_ROUTES_CACHE_KEY = 'ub-route-cache';
   const UB_REMOTE_DEBUG_KEY = 'ub-remote-debug';
   const UB_CACHE_TIMEOUT_ENV_KEY = 'UB_WP_ROUTES_CACHE_EXP';
-  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.9';
-  const UB_VERSION = '0.1.9';
+  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.10';
+  const UB_VERSION = '0.1.10';
 
   public static function get_page_server_domain() {
     $domain = getenv('UB_PAGE_SERVER_DOMAIN');
@@ -32,11 +32,11 @@ class UBConfig {
 
   public static function fetch_proxyable_url_set($domain, $etag) {
     if(!$domain) {
-      UBLogger::warning('Domain not provided, not fetching wp-routes.json');
+      UBLogger::warning('Domain not provided, not fetching sitemap.xml');
       return array('FAILURE', null, null, null);
     }
 
-    $url = 'https://' . UBConfig::get_page_server_domain() . '/wp-routes.json';
+    $url = 'https://' . UBConfig::get_page_server_domain() . '/sitemap.xml';
     $curl = curl_init();
     $curl_options = array(
       CURLOPT_URL => $url,
@@ -79,16 +79,15 @@ class UBConfig {
     }
 
     if ($http_code == 200) {
-      $json_body = json_decode($body);
+      list($success, $result) = UBConfig::url_list_from_sitemap($body);
 
-      if (is_null($json_body)) {
-        $json_error = json_last_error();
-        UBLogger::warning("An error occurred while processing routes, JSON error: '$json_error'");
-        return array('FAILURE', null, null, null);
+      if ($success) {
+        UBLogger::debug("Retrieved new routes, HTTP code: '$http_code'");
+        return array('NEW', $etag, $max_age, $result);
       }
       else {
-        UBLogger::debug("Retrieved new routes, HTTP code: '$http_code'");
-        return array('NEW', $etag, $max_age, $json_body);
+        UBLogger::warning("An error occurred while processing routes, XML errors: '$result'");
+        return array('FAILURE', null, null, null);
       }
     }
     if ($http_code == 304) {
@@ -102,6 +101,40 @@ class UBConfig {
     else {
       UBLogger::warning("An error occurred while retrieving routes; HTTP code: '$http_code'; Error: " . $curl_error);
       return array('FAILURE', null, null, null);
+    }
+  }
+
+  public static function url_list_from_sitemap($string) {
+    if (is_null($string)) {
+      return array(false, array('input is null'));
+    }
+
+    $use_internal_errors = libxml_use_internal_errors(true);
+    $sitemap = simplexml_load_string($string);
+
+    if($sitemap) {
+      libxml_use_internal_errors($use_internal_errors);
+      $urls = array();
+
+      // Valid XML that is not a valid sitemap.xml will be considered an empty sitemap.xml.
+      // We have no easy way to tell the difference between the two.
+      if (isset($sitemap->url)) {
+        foreach ($sitemap->url as $sitemap_url) {
+          if (isset($sitemap_url->loc)) {
+            $url = (string) $sitemap_url->loc;
+            // URLs come in with protocol and trailing slash, we need just host and path with no
+            // trailing slash internally.
+            $urls[] = parse_url($url, PHP_URL_HOST) . rtrim(parse_url($url, PHP_URL_PATH), '/');
+          }
+        }
+      }
+
+      return array(true, $urls);
+    }
+    else {
+      $errors = libxml_get_errors();
+      libxml_use_internal_errors($use_internal_errors);
+      return array(false, $errors);
     }
   }
 
