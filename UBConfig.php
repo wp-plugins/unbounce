@@ -6,8 +6,8 @@ class UBConfig {
   const UB_ROUTES_CACHE_KEY = 'ub-route-cache';
   const UB_REMOTE_DEBUG_KEY = 'ub-remote-debug';
   const UB_CACHE_TIMEOUT_ENV_KEY = 'UB_WP_ROUTES_CACHE_EXP';
-  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.16';
-  const UB_VERSION = '0.1.16';
+  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.18';
+  const UB_VERSION = '0.1.18';
 
   public static function get_page_server_domain() {
     $domain = getenv('UB_PAGE_SERVER_DOMAIN');
@@ -86,7 +86,8 @@ class UBConfig {
         return array('NEW', $etag, $max_age, $result);
       }
       else {
-        UBLogger::warning("An error occurred while processing routes, XML errors: '$result'");
+        $errors = join(', ', $result);
+        UBLogger::warning("An error occurred while processing routes, XML errors: '$errors'");
         return array('FAILURE', null, null, null);
       }
     }

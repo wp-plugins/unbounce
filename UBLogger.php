@@ -24,7 +24,8 @@ class UBLogger {
         'time_sent' => $datetime->format('Y-m-d\TH:i:s.000\Z'),
         'source' => UBConfig::UB_USER_AGENT . ' ' . gethostname()
       );
-      $data_string = json_encode($data, JSON_UNESCAPED_SLASHES);
+      $json_unescaped = json_encode($data);
+      $data_string = str_replace('\\/', '/', $json_unescaped);
 
       $curl = curl_init();
       $curl_options = array(
