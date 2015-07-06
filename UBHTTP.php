@@ -1,10 +1,9 @@
 <?php
 
 class UBHTTP {
-  private static $powered_by_header_regex  = '/^X-Powered-By: (.+)$/i';
-  private static $form_confirmation_url_regex = '/(.+)\/[a-z]+-form_confirmation\.html/';
-  private static $forward_headers = '/^(Content-Type:|Location:|ETag:|Last-Modified:|Link:|Content-Location:|Set-Cookie:|X-Server-Instance:|X-Unbounce-PageId:|X-Unbounce-Variant:|X-Unbounce-VisitorID:)/i';
-
+  public static $powered_by_header_regex  = '/^X-Powered-By: (.+)$/i';
+  public static $form_confirmation_url_regex = '/(.+)\/[a-z]+-form_confirmation\.html/';
+  public static $forward_headers = '/^(Content-Type:|Location:|ETag:|Last-Modified:|Link:|Content-Location:|Set-Cookie:|X-Server-Instance:|X-Unbounce-PageId:|X-Unbounce-Variant:|X-Unbounce-VisitorID:)/i';
 
   public static function is_private_ip_address($ip_address) {
     return !filter_var($ip_address,
@@ -45,10 +44,8 @@ class UBHTTP {
   }
 
   public static function get_proxied_for_header($out_headers,
-                                                $request_headers,
+                                                $forwarded_for,
                                                 $current_ip) {
-    $forwarded_for = UBUtil::array_fetch($request_headers, 'X-Forwarded-For');
-
     if($forwarded_for !== null && UBHTTP::is_private_ip_address($current_ip)) {
       $proxied_for = $forwarded_for;
     } else {
@@ -133,11 +130,11 @@ class UBHTTP {
                                         $user_agent) {
 
     $existing_headers = headers_list();
-    $request_headers  = getallheaders();
-    $remote_ip = $_SERVER['REMOTE_ADDR'];
+    $forwarded_for = UBUtil::array_fetch($_SERVER, 'HTTP_X_FORWARDED_FOR');
+    $remote_ip = UBUtil::array_fetch($_SERVER, 'REMOTE_ADDR');
 
     $headers = UBHTTP::get_proxied_for_header($headers0,
-                                              $request_headers,
+                                              $forwarded_for,
                                               $remote_ip);
 
     UBLogger::debug_var('target_url', $target_url);

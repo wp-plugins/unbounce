@@ -3,17 +3,18 @@
 Plugin Name: Unbounce
 Plugin URI: http://unbounce.com
 Description: Publish Unbounce Landing Pages to your Wordpress Domain.
-Version: 0.1.16
+Version: 0.1.18
 Author: Unbounce
 Author URI: http://unbounce.com
 License: GPLv2
 */
 
+require_once dirname(__FILE__) . '/UBCompatibility.php';
 require_once dirname(__FILE__) . '/UBUtil.php';
 require_once dirname(__FILE__) . '/UBConfig.php';
 require_once dirname(__FILE__) . '/UBLogger.php';
 require_once dirname(__FILE__) . '/UBHTTP.php';
-require_once dirname(__FILE__). '/UBIcon.php';
+require_once dirname(__FILE__) . '/UBIcon.php';
 
 register_activation_hook(__FILE__, function() {
   add_option(UBConfig::UB_ROUTES_CACHE_KEY, array());
@@ -52,7 +53,7 @@ add_action('init', function() {
   UBLogger::debug_var('domain', $domain);
   UBLogger::debug_var('current_path', $current_path);
   UBLogger::debug_var('raw_url', $raw_url);
-  UBLogger::debug_var('current_url ', $current_url );
+  UBLogger::debug_var('current_url', $current_url );
 
   ////////////////////
 
