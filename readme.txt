@@ -3,7 +3,7 @@ Contributors: unbouncewordpress
 Tags: unbounce
 Requires at least: 4.1.5
 Tested up to: 4.2.2
-Stable tag: 0.1.18
+Stable tag: 0.1.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,7 +43,11 @@ Unbounce to that domain for them to be visible on your Wordpress site.
 
 = Do I need to log in to Unbounce? =
 
-No, the plugin will work without any authentication.
+Yes, after installing and activating this plugin, you will need to go "Unbounce Pages" in the admin
+section and click "Authorize With Unbounce." You will then be sent to Unbounce where you need to
+log in. You must log in as an Unbounce user that has access to the Client that has the current
+domain in Unbounce, or you will need to authorize again as an authorized user before the plugin
+will function.
 
 = Does this plugin fetch any data from Unbounce? =
 
@@ -64,8 +68,13 @@ to help track down the issue.
 
 == Changelog ==
 
-= 0.1.18 =
-* Documentation changes
+= 0.1.19 =
+* This release introduces the requirement to authorize your installation with Unbounce. After installing
+  you will need to go "Unbounce Pages" in the admin section and click "Authorize With Unbounce." You
+  will then be sent to Unbounce where you need to log in. You must log in as an Unbounce user that
+  has access to the Client that has the current domain in Unbounce, or you will need to authorize
+  again as an authorized user before the plugin will function.
+* Fixes compatibility issues with caching plugins such as ZenCache, W3 Total Cache, and WP Super Cache
 
 = 0.1.1 =
 * Initial release

@@ -5,21 +5,41 @@ class UBConfig {
   const UB_PLUGIN_NAME = 'ub-wordpress';
   const UB_ROUTES_CACHE_KEY = 'ub-route-cache';
   const UB_REMOTE_DEBUG_KEY = 'ub-remote-debug';
+  const UB_PAGE_SERVER_DOMAIN_KEY = 'ub-page-server-domain';
+  const UB_REMOTE_LOG_URL_KEY = 'ub-remote-log-url';
+  const UB_API_URL_KEY = 'ub-api-url';
+  const UB_API_CLIENT_ID_KEY = 'ub-api-client-id';
+  const UB_AUTHORIZED_DOMAINS_KEY = 'ub-authorized-domains';
   const UB_CACHE_TIMEOUT_ENV_KEY = 'UB_WP_ROUTES_CACHE_EXP';
-  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.18';
-  const UB_VERSION = '0.1.18';
+  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.19';
+  const UB_VERSION = '0.1.19';
 
-  public static function get_page_server_domain() {
+  public static function default_page_server_domain() {
     $domain = getenv('UB_PAGE_SERVER_DOMAIN');
     return $domain ? $domain : 'wp.unbounce.com';
   }
 
-  public static function get_remote_log_url() {
+  public static function default_remote_log_url() {
     $url = getenv('UB_REMOTE_LOG_URL');
     if ($url == null) {
       return 'https://events-gateway.unbounce.com/events/wordpress_logs';
     }
     return $url;
+  }
+
+  public static function default_api_url() {
+    $url = getenv('UB_API_URL');
+    return $url ? $url : 'https://api.unbounce.com';
+  }
+
+  public static function default_api_client_id() {
+    $client_id = getenv('UB_API_CLIENT_ID');
+    return $client_id ? $client_id : '660a311881321b9d4e777993e50875dec5da9cc4ef44369d121544b21da52b92';
+  }
+
+  public static function default_authorized_domains() {
+    $domains = getenv('UB_AUTHORIZED_DOMAINS');
+    return $domains ? explode(',', $domains) : array();
   }
 
   public static function debug_loggging_enabled() {
@@ -30,13 +50,13 @@ class UBConfig {
     return get_option(UBConfig::UB_REMOTE_DEBUG_KEY, 0) == 1;
   }
 
-  public static function fetch_proxyable_url_set($domain, $etag) {
+  public static function fetch_proxyable_url_set($domain, $etag, $ps_domain) {
     if(!$domain) {
       UBLogger::warning('Domain not provided, not fetching sitemap.xml');
       return array('FAILURE', null, null, null);
     }
 
-    $url = 'https://' . UBConfig::get_page_server_domain() . '/sitemap.xml';
+    $url = 'https://' . $ps_domain . '/sitemap.xml';
     $curl = curl_init();
     $curl_options = array(
       CURLOPT_URL => $url,
@@ -139,8 +159,8 @@ class UBConfig {
     }
   }
 
-  public static function _read_unbounce_domain_info($cache_getter,
-                                                    $cache_setter,
+  public static function _read_unbounce_domain_info($options_getter,
+                                                    $options_setter,
                                                     $fetch_proxyable_url_set,
                                                     $domain,
                                                     $expire_now=false) {
@@ -149,7 +169,8 @@ class UBConfig {
 
     $cache_max_time_default = 10;
 
-    $domains_info = $cache_getter(UBConfig::UB_ROUTES_CACHE_KEY);
+    $ps_domain = $options_getter(UBConfig::UB_PAGE_SERVER_DOMAIN_KEY);
+    $domains_info = $options_getter(UBConfig::UB_ROUTES_CACHE_KEY);
     $domain_info = UBUtil::array_fetch($domains_info, $domain, array());
 
     $proxyable_url_set = UBUtil::array_fetch($domain_info, 'proxyable_url_set');
@@ -165,7 +186,10 @@ class UBConfig {
         is_null($proxyable_url_set) ||
         ($current_time - $proxyable_url_set_fetched_at > $cache_max_time)) {
 
-      $result_array = call_user_func($fetch_proxyable_url_set, $domain, $proxyable_url_set_etag);
+      $result_array = call_user_func($fetch_proxyable_url_set,
+                                     $domain,
+                                     $proxyable_url_set_etag,
+                                     $ps_domain);
 
       list($routes_status, $etag, $max_age, $proxyable_url_set_new) = $result_array;
 
@@ -191,7 +215,7 @@ class UBConfig {
 
       $domain_info['proxyable_url_set_fetched_at'] = $current_time;
       $domains_info[$domain] = $domain_info;
-      $cache_setter(UBConfig::UB_ROUTES_CACHE_KEY, $domains_info);
+      $options_setter(UBConfig::UB_ROUTES_CACHE_KEY, $domains_info);
     }
 
 
@@ -207,6 +231,12 @@ class UBConfig {
       'UBConfig::fetch_proxyable_url_set',
       $domain,
       $expire_now);
+  }
+
+  public static function is_authorized_domain($domain0) {
+    $pieces = explode(':', $domain0);
+    $domain = $pieces[0];
+    return in_array($domain, get_option(UBConfig::UB_AUTHORIZED_DOMAINS_KEY));
   }
 
 }
