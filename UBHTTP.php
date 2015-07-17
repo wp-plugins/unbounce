@@ -205,9 +205,7 @@ class UBHTTP {
     UBLogger::debug_var('get_url_purpose $path', $path);
     UBLogger::debug_var('get_url_purpose $url_without_protocol', $url_without_protocol);
 
-    if ($http_method == 'GET' && $path == '/_ubhc') {
-      return 'HealthCheck';
-    } elseif ($http_method == "POST" &&
+    if ($http_method == "POST" &&
         preg_match("/^\/(fsn|fsg|fs)\/?$/", $path)) {
 
       return "SubmitLead";
