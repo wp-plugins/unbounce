@@ -11,8 +11,8 @@ class UBConfig {
   const UB_API_CLIENT_ID_KEY = 'ub-api-client-id';
   const UB_AUTHORIZED_DOMAINS_KEY = 'ub-authorized-domains';
   const UB_CACHE_TIMEOUT_ENV_KEY = 'UB_WP_ROUTES_CACHE_EXP';
-  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.20';
-  const UB_VERSION = '0.1.20';
+  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.21';
+  const UB_VERSION = '0.1.21';
 
   public static function default_page_server_domain() {
     $domain = getenv('UB_PAGE_SERVER_DOMAIN');
