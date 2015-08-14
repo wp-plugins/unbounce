@@ -10,9 +10,10 @@ class UBConfig {
   const UB_API_URL_KEY = 'ub-api-url';
   const UB_API_CLIENT_ID_KEY = 'ub-api-client-id';
   const UB_AUTHORIZED_DOMAINS_KEY = 'ub-authorized-domains';
+  const UB_HAS_AUTHORIZED_KEY = 'ub-has-authorized';
   const UB_CACHE_TIMEOUT_ENV_KEY = 'UB_WP_ROUTES_CACHE_EXP';
-  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.21';
-  const UB_VERSION = '0.1.21';
+  const UB_USER_AGENT = 'Unbounce WP Plugin 0.1.22';
+  const UB_VERSION = '0.1.22';
 
   public static function default_page_server_domain() {
     $domain = getenv('UB_PAGE_SERVER_DOMAIN');
@@ -60,6 +61,10 @@ class UBConfig {
 
   public static function authorized_domains() {
     return get_option(UBConfig::UB_AUTHORIZED_DOMAINS_KEY, UBConfig::default_authorized_domains());
+  }
+
+  public static function has_authorized() {
+    return (bool) get_option(UBConfig::UB_HAS_AUTHORIZED_KEY);
   }
 
   public static function debug_loggging_enabled() {
@@ -153,7 +158,7 @@ class UBConfig {
     $use_internal_errors = libxml_use_internal_errors(true);
     $sitemap = simplexml_load_string($string);
 
-    if($sitemap) {
+    if($sitemap !== false) {
       libxml_use_internal_errors($use_internal_errors);
       $urls = array();
 
